@@ -13,9 +13,12 @@ export default async function handler(req, res) {
   const key = process.env.GEMINI_API_KEY;
   if (!key) return res.status(500).json({ error: "GEMINI_API_KEY env variable is not set in Vercel" });
 
+  // Model is configurable via env var. flash-lite has a much higher free-tier daily quota.
+  const model = process.env.GEMINI_MODEL || "gemini-2.0-flash-lite";
+
   try {
     const upstream = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
